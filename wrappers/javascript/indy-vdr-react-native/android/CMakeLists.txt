@@ -6,7 +6,7 @@ set (LIB_NAME "indyvdr")
 file (GLOB LIBINDY_VDR_DIR "${CMAKE_SOURCE_DIR}/../native/mobile/android/${ANDROID_ABI}")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 
 set (BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
 if(${REACT_NATIVE_VERSION} GREATER_EQUAL 71)
@@ -87,7 +87,14 @@ if(${REACT_NATIVE_VERSION} LESS 71)
   )
 endif()
 
-if(${REACT_NATIVE_VERSION} GREATER_EQUAL 71)
+if(${REACT_NATIVE_VERSION} GREATER_EQUAL 76)
+  target_link_libraries(
+    ${PACKAGE_NAME}
+    ReactAndroid::jsi
+    ReactAndroid::reactnative
+    fbjni::fbjni
+  )
+elseif(${REACT_NATIVE_VERSION} GREATER_EQUAL 71)
   target_link_libraries(
     ${PACKAGE_NAME}
     ReactAndroid::jsi

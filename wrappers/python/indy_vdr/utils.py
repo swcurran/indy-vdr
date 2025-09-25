@@ -2,10 +2,10 @@ import os
 from typing import Dict, List, Optional
 import urllib.request
 import urllib.error
-
+import json
 
 INDY_NETWORKS_GITHUB_RAW_BASE = (
-    "https://raw.githubusercontent.com/hyperledger/indy-did-networks/main"
+    "https://raw.githubusercontent.com/hyperledger/indy-node-monitor/main/fetch-validator-status/networks.json"
 )
 GENESIS_FILENAME = "pool_transactions_genesis.json"
 
@@ -62,28 +62,40 @@ def get_genesis_txns_from_did_indy_repo_by_name(
     *,
     repo_base_url: Optional[str] = None,
 ) -> Dict[str, str]:
-    """Retrieves genesis txn from standard indy networks repo given their names."""
+    """Retrieves genesis txn from indy networks monitor repo given their names."""
     genesis_map = dict()
 
     genesis_filename = genesis_filename if genesis_filename else GENESIS_FILENAME
-    repo_base_url = repo_base_url or INDY_NETWORKS_GITHUB_RAW_BASE
+    networks_json_url = repo_base_url or INDY_NETWORKS_GITHUB_RAW_BASE
 
     base_dir = "networks"
 
-    for name in namespaces:
-        namespace = name
-        name = name.replace(":", "/")
+    try:
+        with urllib.request.urlopen(networks_json_url) as response:
+            networks_data = json.loads(response.read().decode())
+    except (urllib.error.URLError, json.JSONDecodeError) as e:
+        print(f"Could not fetch or parse networks.json: {e}")
+        return genesis_map
+
+    for namespace in namespaces:
+        genesis_url = None
+        for network_key, network_info in networks_data.items():
+            if network_info.get("indyNamespace") == namespace:
+                genesis_url = network_info.get("genesisUrl")
+                break
+        
+        if not genesis_url:
+            print(f"Could not find genesis URL for namespace: {namespace}")
+            continue
+
+        name = namespace.replace(":", "/")
         parts = iter(name.split("/"))
         main = next(parts, None)
         sub = next(parts, None)
 
-        genesis_file_url = f"{repo_base_url}/networks/{name}/{genesis_filename}"
         target_local_path = f"{base_dir}/{name}/{genesis_filename}"
         try:
-            urllib.request.urlretrieve(genesis_file_url, target_local_path)
-
-        except FileNotFoundError:
-            # Create directories and try again
+            # Create directories if they don't exist
             if not os.path.isdir(f"{base_dir}"):
                 os.mkdir(f"{base_dir}")
             if not os.path.isdir(f"{base_dir}/{main}"):
@@ -91,13 +103,10 @@ def get_genesis_txns_from_did_indy_repo_by_name(
             if sub and not os.path.isdir(f"{base_dir}/{main}/{sub}"):
                 os.mkdir(f"{base_dir}/{main}/{sub}")
 
-            urllib.request.urlretrieve(genesis_file_url, target_local_path)
-
-        except urllib.error.HTTPError:
-            target_local_path = None
-            print(f"Could not fetch genesis file for {namespace}")
-
-        if target_local_path:
+            urllib.request.urlretrieve(genesis_url, target_local_path)
             genesis_map[namespace] = target_local_path
+
+        except (urllib.error.URLError, FileNotFoundError) as e:
+            print(f"Could not fetch genesis file for {namespace} from {genesis_url}: {e}")
 
     return genesis_map

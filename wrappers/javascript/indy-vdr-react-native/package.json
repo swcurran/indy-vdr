@@ -44,16 +44,16 @@
     "@mapbox/node-pre-gyp": "^1.0.10"
   },
   "devDependencies": {
-    "@types/react": "^16.9.19",
-    "@types/react-native": "^0.67.0",
-    "prettier": "2.6.2",
-    "react": "17.0.2",
-    "react-native": "0.67.2",
-    "typescript": "~4.9.4"
+    "@types/react": "^18.2.0",
+    "prettier": "^3.0.0",
+    "react": "^18.2.0",
+    "react-native": ">= 0.77",
+    "rimraf": "^5.0.0",
+    "typescript": "~5.4.5"
   },
   "peerDependencies": {
-    "react": ">= 16",
-    "react-native": ">= 0.66.0"
+    "react": ">= 18",
+    "react-native": ">= 0.77"
   },
   "binary": {
     "module_name": "indy_vdr",
@@ -61,5 +61,13 @@
     "remote_path": "v0.4.0",
     "host": "https://github.com/hyperledger/indy-vdr/releases/download/",
     "package_name": "library-ios-android.tar.gz"
+  },
+  "codegenConfig": {
+    "name": "IndyVdrSpec",
+    "type": "modules",
+    "jsSrcsDir": "src/specs",
+    "android": {
+      "javaPackageName": "org.hyperledger.indyvdr"
+    }
   }
 }

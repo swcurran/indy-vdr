@@ -1,7 +1,7 @@
 name: "Indy-VDR"
 
 env:
-  RUST_VERSION: "1.81.0"
+  RUST_VERSION: "1.85.0"
   CROSS_VERSION: "0.2.5"
 
 on:
@@ -42,7 +42,7 @@ jobs:
     name: Run checks
     strategy:
       matrix:
-        os: [macos-13, windows-latest, ubuntu-latest]
+        os: [macos-14, windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -60,6 +60,7 @@ jobs:
         with:
           shared-key: deps
           cache-on-failure: true
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Cargo check
         run: cargo check
@@ -127,7 +128,7 @@ jobs:
             # using cross here to build against an older glibc for compatibility
             use_cross: true
           - architecture: darwin-universal
-            os: macos-13
+            os: macos-14
             lib: libindy_vdr.dylib
             target: darwin-universal
             # As of Rust 1.80, aarch64-apple-darwin is stable
@@ -241,10 +242,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.JS 18.x
+      - name: Set up Node.JS 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 20.x
           registry-url: "https://registry.npmjs.org/"
 
       - name: Fetch library artifacts
@@ -298,7 +299,7 @@ jobs:
   build-ios:
     name: Build library (iOS)
     needs: [checks]
-    runs-on: macos-13
+    runs-on: macos-14
     strategy:
       matrix:
         target: [aarch64-apple-ios, aarch64-apple-ios-sim, x86_64-apple-ios]
@@ -337,7 +338,7 @@ jobs:
 
   create-ios-xcframework:
     name: Create iOS xcframework
-    runs-on: macos-13
+    runs-on: macos-14
     needs: build-ios
 
     steps:
@@ -500,7 +501,7 @@ jobs:
           - os: ubuntu-latest
             architecture: linux-x86_64
             plat-name: manylinux2014_x86_64
-          - os: macos-13
+          - os: macos-14
             architecture: darwin-universal
             plat-name: macosx_10_9_universal2
           - os: windows-latest

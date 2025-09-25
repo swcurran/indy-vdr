@@ -107,12 +107,11 @@ android {
   }
 
   packagingOptions {
-    excludes = ["**/libc++_shared.so", 
-                "**/libfbjni.so", 
-                "**/libjsi.so", 
-                "**/libreactnativejni.so", 
-                "**/libjscexecutor.so", 
-    ]
+    if (REACT_NATIVE_VERSION >= 76) {
+      excludes = ["**/libjsi.so", "**/libreactnative.so" ]
+    } else {
+      excludes = ["**/libjsi.so", "**/libreactnativejni.so" ]
+    }
   }
   
   buildTypes {

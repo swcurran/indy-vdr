@@ -1,13 +1,14 @@
 # syntax = docker/dockerfile:1.0-experimental
 
-FROM rust:1.41-slim
+FROM rust:1.85-slim
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
     	build-essential cmake lcov && \
     rm -rf /var/lib/apt/lists/*
 
-RUN rustup default nightly
+COPY rust-toolchain.toml ./
+RUN rustup show
 
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
 	cargo install grcov
@@ -16,11 +17,10 @@ WORKDIR /volume
 
 RUN mkdir .cargo coverage libindy_vdr indy-vdr-proxy
 
-COPY Cargo.toml Cargo.lock docker/rustc-add-coverage.sh ./
-COPY indy-vdr-proxy/Cargo.toml indy-vdr-proxy/
-COPY libindy_vdr/Cargo.toml libindy_vdr/
+COPY docker/rustc-add-coverage.sh ./
 
-RUN cargo vendor > .cargo/config
+# Note: cargo vendor and source files are expected to be mounted at runtime
+# This image is designed for use with volume mounts of the full source tree
 
 # mount /volume/libindy_vdr, /volume/indy-vdr-proxy, /volume/coverage here
 # mount /volume/target to cache build artifacts
