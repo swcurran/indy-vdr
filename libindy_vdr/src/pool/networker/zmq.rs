@@ -711,8 +711,12 @@ impl ZMQConnection {
     fn _get_socket(&mut self, idx: usize) -> VdrResult<&ZSocket> {
         if self.sockets[idx].is_none() {
             debug!("Open new socket for node {}", &self.remotes[idx].name);
-            let s: ZSocket =
-                self.remotes[idx].connect(&self.ctx, &self.key_pair, self.socks_proxy.clone(), self.client_port_range)?;
+            let s: ZSocket = self.remotes[idx].connect(
+                &self.ctx,
+                &self.key_pair,
+                self.socks_proxy.clone(),
+                self.client_port_range,
+            )?;
             self.sockets[idx] = Some(s)
         }
         Ok(self.sockets[idx].as_ref().unwrap())
@@ -779,10 +783,10 @@ impl RemoteNode {
                     }
                 }
             }
-            
+
             if !port_bound {
                 warn!(
-                    "Could not bind to any port in range {}-{}, using default ZMQ behavior", 
+                    "Could not bind to any port in range {}-{}, using default ZMQ behavior",
                     min_port, max_port
                 );
             }

@@ -57,13 +57,19 @@ impl Validatable for PoolConfig {
         }
         if let Some((min_port, max_port)) = self.client_port_range {
             if min_port == 0 {
-                return Err(invalid!("`client_port_range` minimum port must be greater than 0"));
+                return Err(invalid!(
+                    "`client_port_range` minimum port must be greater than 0"
+                ));
             }
             if max_port == 0 {
-                return Err(invalid!("`client_port_range` maximum port must be greater than 0"));
+                return Err(invalid!(
+                    "`client_port_range` maximum port must be greater than 0"
+                ));
             }
             if min_port > max_port {
-                return Err(invalid!("`client_port_range` minimum port must be less than or equal to maximum port"));
+                return Err(invalid!(
+                    "`client_port_range` minimum port must be less than or equal to maximum port"
+                ));
             }
         }
         Ok(())
@@ -119,7 +125,7 @@ impl PoolConfig {
             .zip(
                 std::env::var(constants::ENV_INDY_VDR_CLIENT_PORT_MAX)
                     .ok()
-                    .and_then(|max_str| max_str.parse::<u16>().ok())
+                    .and_then(|max_str| max_str.parse::<u16>().ok()),
             )
     }
 }
