@@ -11,6 +11,7 @@
 - [Wrappers](#building-from-source)
 - [Proxy Server](#proxy-server)
 - [Connecting to a Ledger](#connecting-to-a-ledger)
+- [Configuration](#configuration)
 - [How to Contribute](#how-to-contribute)
 
 ## Introduction
@@ -87,6 +88,30 @@ Indy VDR contains a DID Resolver to resolve DIDs and dereference DID Urls to led
 Whether using the library or the proxy server, you will need a `genesis.txn` file containing the set of pool genesis transactions. You can run a local pool in Docker using [VON-Network](https://github.com/bcgov/von-network) or follow the [Indy-SDK instructions](https://github.com/hyperledger/indy-sdk#how-to-start-local-nodes-pool-with-docker).
 
 However the library is used, the `RUST_LOG` environment variable may be set in order to adjust the volume of logging messages produced. Acceptable values are `error`, `warn`, `info`, `debug`, and `trace`. The `RUST_BACKTRACE` environment variable may also be set to `full` for extended output in the case of fatal errors.
+
+## Configuration
+
+The following environment variables can be used to configure indy-vdr behavior:
+
+### Network Configuration
+
+- **`INDY_VDR_CLIENT_PORT_MIN`** - Minimum port number for outbound ZMQ client connections (optional)
+- **`INDY_VDR_CLIENT_PORT_MAX`** - Maximum port number for outbound ZMQ client connections (optional)
+
+When both `INDY_VDR_CLIENT_PORT_MIN` and `INDY_VDR_CLIENT_PORT_MAX` are set, indy-vdr will attempt to bind ZMQ client sockets to ports within the specified range. This is useful in corporate environments where firewalls restrict outbound connections to specific port ranges.
+
+**Example:**
+```bash
+export INDY_VDR_CLIENT_PORT_MIN=9800
+export INDY_VDR_CLIENT_PORT_MAX=9850
+```
+
+If the specified port range is exhausted, indy-vdr will fall back to using system-assigned ephemeral ports.
+
+### Logging Configuration
+
+- **`RUST_LOG`** - Controls logging verbosity (`error`, `warn`, `info`, `debug`, `trace`)
+- **`RUST_BACKTRACE`** - Set to `full` for extended error output
 
 ## How to Contribute
 

@@ -421,6 +421,7 @@ impl ZMQThread {
                 self.config.conn_active_timeout,
                 self.config.ack_timeout,
                 self.config.socks_proxy.clone(),
+                self.config.client_port_range,
             );
             trace!("Created new pool connection");
             conn.init_request(sub_id);
@@ -489,6 +490,7 @@ pub struct ZMQConnection {
     active_timeout: i64,
     idle_timeout: i64,
     socks_proxy: Option<String>,
+    client_port_range: Option<(u16, u16)>,
 }
 
 impl ZMQConnection {
@@ -498,6 +500,7 @@ impl ZMQConnection {
         active_timeout: i64,
         idle_timeout: i64,
         socks_proxy: Option<String>,
+        client_port_range: Option<(u16, u16)>,
     ) -> Self {
         trace!("ZMQConnection::new: from remotes {:?}", remotes);
 
@@ -518,6 +521,7 @@ impl ZMQConnection {
             active_timeout,
             idle_timeout,
             socks_proxy,
+            client_port_range,
         }
     }
 
@@ -708,7 +712,7 @@ impl ZMQConnection {
         if self.sockets[idx].is_none() {
             debug!("Open new socket for node {}", &self.remotes[idx].name);
             let s: ZSocket =
-                self.remotes[idx].connect(&self.ctx, &self.key_pair, self.socks_proxy.clone())?;
+                self.remotes[idx].connect(&self.ctx, &self.key_pair, self.socks_proxy.clone(), self.client_port_range)?;
             self.sockets[idx] = Some(s)
         }
         Ok(self.sockets[idx].as_ref().unwrap())
@@ -729,6 +733,7 @@ impl RemoteNode {
         ctx: &zmq::Context,
         key_pair: &zmq::CurveKeyPair,
         socks_proxy: Option<String>,
+        client_port_range: Option<(u16, u16)>,
     ) -> VdrResult<ZSocket> {
         let s = ctx.socket(zmq::SocketType::DEALER)?;
         s.set_identity(base64::encode(key_pair.public_key).as_bytes())?;
@@ -750,6 +755,39 @@ impl RemoteNode {
         } else {
             debug!("Socks proxy is not configured");
         }
+
+        // Try to bind to a client port within the configured range,
+        // fallback to default behavior if all available ports are in use or no range is set
+        if let Some((min_port, max_port)) = client_port_range {
+            let mut port_bound = false;
+            for port in min_port..=max_port {
+                let bind_addr = format!("tcp://*:{}", port);
+                match s.bind(&bind_addr) {
+                    Ok(_) => {
+                        debug!("Bound ZMQ client socket to port {}", port);
+                        port_bound = true;
+                        break;
+                    }
+                    Err(zmq::Error::EADDRINUSE) => {
+                        // Port is in use, try the next one
+                        continue;
+                    }
+                    Err(err) => {
+                        // Other error, log and continue
+                        warn!("Failed to bind client socket to port {}: {}", port, err);
+                        continue;
+                    }
+                }
+            }
+            
+            if !port_bound {
+                warn!(
+                    "Could not bind to any port in range {}-{}, using default ZMQ behavior", 
+                    min_port, max_port
+                );
+            }
+        }
+
         s.connect(&self.zaddr)?;
         Ok(s)
     }

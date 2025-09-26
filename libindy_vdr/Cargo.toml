@@ -27,9 +27,7 @@ rich_schema = ["indy-data-types/rich_schema"]
 default = ["ffi", "log", "zmq_vendored"]
 
 [dependencies]
-# This is added so we can lock the version that zmq uses
-# 0.1.49 is broken for ios targets
-cmake = { version = "=0.1.48", optional = true }
+cmake = { version = "0.1.54", optional = true }
 base64 = "0.22"
 bs58 = "0.5"
 etcommon-rlp = "0.2.4"

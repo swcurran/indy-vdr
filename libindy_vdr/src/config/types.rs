@@ -30,6 +30,9 @@ pub struct PoolConfig {
     /// The socks proxy host name and port for ZMQ (example: proxy1.intranet.company.com:1080)
     #[serde(default = "PoolConfig::default_socks_proxy")]
     pub socks_proxy: Option<String>,
+    /// The client port range for ZMQ connections (min_port, max_port)
+    #[serde(default = "PoolConfig::default_client_port_range")]
+    pub client_port_range: Option<(u16, u16)>,
 }
 
 impl Validatable for PoolConfig {
@@ -51,6 +54,17 @@ impl Validatable for PoolConfig {
         }
         if self.request_read_nodes == 0 {
             return Err(invalid!("`request_read_nodes` must be greater than 0"));
+        }
+        if let Some((min_port, max_port)) = self.client_port_range {
+            if min_port == 0 {
+                return Err(invalid!("`client_port_range` minimum port must be greater than 0"));
+            }
+            if max_port == 0 {
+                return Err(invalid!("`client_port_range` maximum port must be greater than 0"));
+            }
+            if min_port > max_port {
+                return Err(invalid!("`client_port_range` minimum port must be less than or equal to maximum port"));
+            }
         }
         Ok(())
     }
@@ -96,6 +110,18 @@ impl PoolConfig {
     pub fn default_socks_proxy() -> Option<String> {
         None
     }
+
+    /// The default client port range is empty / unset (uses system ephemeral ports)
+    pub fn default_client_port_range() -> Option<(u16, u16)> {
+        std::env::var(constants::ENV_INDY_VDR_CLIENT_PORT_MIN)
+            .ok()
+            .and_then(|min_str| min_str.parse::<u16>().ok())
+            .zip(
+                std::env::var(constants::ENV_INDY_VDR_CLIENT_PORT_MAX)
+                    .ok()
+                    .and_then(|max_str| max_str.parse::<u16>().ok())
+            )
+    }
 }
 
 impl Default for PoolConfig {
@@ -109,6 +135,7 @@ impl Default for PoolConfig {
             conn_active_timeout: Self::default_conn_active_timeout(),
             request_read_nodes: Self::default_request_read_nodes(),
             socks_proxy: Self::default_socks_proxy(),
+            client_port_range: Self::default_client_port_range(),
         }
     }
 }

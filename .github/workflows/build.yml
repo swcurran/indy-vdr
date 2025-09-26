@@ -60,7 +60,7 @@ jobs:
         with:
           shared-key: deps
           cache-on-failure: true
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
 
       - name: Cargo check
         run: cargo check
