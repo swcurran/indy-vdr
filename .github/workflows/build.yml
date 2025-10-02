@@ -246,6 +246,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
+          cache: yarn
           registry-url: "https://registry.npmjs.org/"
 
       - name: Fetch library artifacts
@@ -324,6 +325,18 @@ jobs:
         run: |
           # Set RUSTFLAGS to cap lints at warning level to prevent warnings from becoming errors
           export RUSTFLAGS="--cap-lints=warn"
+          # Set iOS deployment target to align with RN 0.77+ requirement (iOS 15.1+)
+          export IPHONEOS_DEPLOYMENT_TARGET=15.1
+          export CMAKE_OSX_DEPLOYMENT_TARGET=15.1
+          # For iOS simulator, use the simulator SDK
+          if [[ "${{ matrix.target }}" == *"sim"* ]]; then
+            export CMAKE_OSX_SYSROOT=$(xcrun --sdk iphonesimulator --show-sdk-path)
+          else
+            export CMAKE_OSX_SYSROOT=$(xcrun --sdk iphoneos --show-sdk-path)
+          fi
+          # Force ZMQ to use the correct compiler for iOS
+          export CC=$(xcrun --find clang)
+          export CXX=$(xcrun --find clang++)
           cargo build --lib --release --target ${{ matrix.target }} --package indy-vdr
 
       - name: List files in target

@@ -4,13 +4,12 @@ import java.nio.file.Paths
 buildscript {
   repositories {
     google()
-    jcenter()
     mavenCentral()
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:4.2.2'
-    classpath 'de.undercouch:gradle-download-task:4.1.2'
+    classpath 'com.android.tools.build:gradle:8.5.2'
+    classpath 'de.undercouch:gradle-download-task:5.5.0'
   }
 }
 
@@ -94,7 +93,8 @@ android {
             abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
             arguments "-DANDROID_STL=c++_shared",
                       "-DREACT_NATIVE_VERSION=${REACT_NATIVE_VERSION}",
-                      "-DNODE_MODULES_DIR=${nodeModules}"
+                      "-DNODE_MODULES_DIR=${nodeModules}",
+                      "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
         }
     }
     
@@ -125,8 +125,8 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
   }
 
   configurations {

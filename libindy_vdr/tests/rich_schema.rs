@@ -12,7 +12,7 @@ use crate::utils::fixtures::*;
 use crate::utils::helpers;
 use crate::utils::pool::*;
 use indy_vdr::ledger::constants;
-use indy_vdr::ledger::identifiers::rich_schema::RichSchemaId;
+use indy_vdr::ledger::identifiers::RichSchemaId;
 use indy_vdr::utils::did::DidValue;
 use rand::Rng;
 
