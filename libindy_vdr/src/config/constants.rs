@@ -11,9 +11,6 @@ pub const DEFAULT_REQUEST_READ_NODES: usize = 2;
 pub const DEFAULT_FRESHNESS_TIMEOUT: u64 = 300;
 pub const DEFAULT_PROTOCOL_VERSION: ProtocolVersion = ProtocolVersion::Node1_4;
 
-pub const ENV_INDY_VDR_CLIENT_PORT_MIN: &str = "INDY_VDR_CLIENT_PORT_MIN";
-pub const ENV_INDY_VDR_CLIENT_PORT_MAX: &str = "INDY_VDR_CLIENT_PORT_MAX";
-
 pub static DEFAULT_GENERATOR: Lazy<Generator> = Lazy::new(|| {
     Generator::from_bytes(
         &hex::decode(
