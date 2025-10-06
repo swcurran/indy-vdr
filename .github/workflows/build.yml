@@ -521,7 +521,7 @@ jobs:
             plat-name: manylinux2014_x86_64
           - os: macos-14
             architecture: darwin-universal
-            plat-name: macosx_10_9_universal2
+            plat-name: macosx_14_0_universal2
           - os: windows-latest
             architecture: windows-x86_64
             plat-name: win_amd64

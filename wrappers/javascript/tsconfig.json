@@ -2,6 +2,7 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "types": ["node", "jest"],
     "paths": {
       "@hyperledger/indy-vdr-nodejs": ["indy-vdr-nodejs/src"],
       "@hyperledger/indy-vdr-react-native": ["indy-vdr-react-native/src"],
