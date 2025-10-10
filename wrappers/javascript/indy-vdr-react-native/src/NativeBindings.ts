@@ -1,5 +1,5 @@
-import type { Callback, CallbackWithResponse, ReturnObject } from './serialize'
 import type { Transactions } from '@hyperledger/indy-vdr-shared'
+import type { Callback, CallbackWithResponse, ReturnObject } from './serialize'
 
 export type PoolHandle = number
 export type RequestHandle = number
@@ -91,6 +91,7 @@ export interface NativeBindings {
     dest: string
     didDocContent?: string
     version?: number
+    seqNo?: number
   }): ReturnObject<RequestHandle>
 
   buildGetSchemaRequest(options: { submitterDid?: string; schemaId: string }): ReturnObject<RequestHandle>
