@@ -73,6 +73,7 @@ def resolveBuildType() {
 }
 
 android {
+  namespace "org.hyperledger.indyvdr"
   compileSdkVersion getExt('compileSdkVersion')
   buildToolsVersion getExt('buildToolsVersion')
   ndkVersion getExt('ndkVersion')
@@ -84,7 +85,7 @@ android {
   }
   
   defaultConfig {
-    minSdkVersion getExtWithFallback('minSdkVersion', '21') 
+    minSdkVersion getExtWithFallback('minSdkVersion', 21) 
     targetSdkVersion getExt('targetSdkVersion')
     
     externalNativeBuild {

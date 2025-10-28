@@ -56,7 +56,7 @@ const serialize = (arg: Argument): SerializedArgument => {
       if (arg instanceof Date) {
         return arg.valueOf()
       } else if (arg instanceof Uint8Array) {
-        return arg.buffer
+        return arg.buffer as ArrayBuffer
       } else {
         return JSON.stringify(arg)
       }

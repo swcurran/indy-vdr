@@ -331,8 +331,8 @@ jobs:
           # Set RUSTFLAGS to cap lints at warning level to prevent warnings from becoming errors
           export RUSTFLAGS="--cap-lints=warn"
           # Set iOS deployment target to align with RN 0.77+ requirement (iOS 15.1+)
-          export IPHONEOS_DEPLOYMENT_TARGET=15.1
-          export CMAKE_OSX_DEPLOYMENT_TARGET=15.1
+          export IPHONEOS_DEPLOYMENT_TARGET=12.0
+          export CMAKE_OSX_DEPLOYMENT_TARGET=12.0
           # For iOS simulator, use the simulator SDK
           if [[ "${{ matrix.target }}" == *"sim"* ]]; then
             export CMAKE_OSX_SYSROOT=$(xcrun --sdk iphonesimulator --show-sdk-path)

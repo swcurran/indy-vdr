@@ -47,25 +47,17 @@
     "@types/react": "^18.2.0",
     "prettier": "^3.0.0",
     "react": "^18.2.0",
-    "react-native": ">= 0.77",
+    "react-native": ">= 0.71",
     "rimraf": "^5.0.0",
     "typescript": "~5.4.5"
   },
   "peerDependencies": {
-    "react": ">= 18",
-    "react-native": ">= 0.77"
+    "react": ">= 16",
+    "react-native": ">= 0.71"
   },
   "binary": {
     "version": "v0.4.1",
     "host": "https://github.com/hyperledger/indy-vdr/releases/download",
     "packageName": "library-ios-android.tar.gz"
-  },
-  "codegenConfig": {
-    "name": "IndyVdrSpec",
-    "type": "modules",
-    "jsSrcsDir": "src/specs",
-    "android": {
-      "javaPackageName": "org.hyperledger.indyvdr"
-    }
   }
 }
