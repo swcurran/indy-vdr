@@ -1,4 +1,4 @@
-FROM ghcr.io/hyperledger/indy-node-container/indy_node:1.13.2-rc5-ubuntu20-main
+FROM ghcr.io/hyperledger/indy-node-container/indy_node:1.13.2-ubuntu20-1.2.10
 RUN pip3 install "supervisor~=4.2"
 
 RUN echo "[supervisord]\n\

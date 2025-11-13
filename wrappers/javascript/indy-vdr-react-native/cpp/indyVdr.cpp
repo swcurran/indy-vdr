@@ -33,8 +33,8 @@ jsi::Value setCacheDirectory(jsi::Runtime &rt, jsi::Object options) {
 };
 
 jsi::Value setLedgerTxnCache(jsi::Runtime &rt, jsi::Object options) {
-  auto capacity = jsiToValue<size_t>(rt, options, "capacity");
-  auto expiry_offset_ms = jsiToValue<c_ulong>(rt, options, "expiry_offset_ms");
+  auto capacity = jsiToValue<int32_t>(rt, options, "capacity");
+  auto expiry_offset_ms = jsiToValue<int64_t>(rt, options, "expiry_offset_ms");
   auto path = jsiToValue<std::string>(rt, options, "path", true);
 
   ErrorCode code = indy_vdr_set_ledger_txn_cache(capacity, expiry_offset_ms, path.length() > 0 ? path.c_str() : nullptr);
@@ -250,11 +250,13 @@ jsi::Value buildGetNymRequest(jsi::Runtime &rt, jsi::Object options) {
   auto seqNo = jsiToValue<int32_t>(rt, options, "seqNo", true);
   auto timestamp = jsiToValue<int64_t>(rt, options, "timestamp", true);
 
+  auto convertedSeqNo = seqNo == 0 ? -1 : seqNo;
+
   RequestHandle out;
 
   ErrorCode code = indy_vdr_build_get_nym_request(
       submitterDid.length() > 0 ? submitterDid.c_str() : nullptr, dest.c_str(),
-      seqNo, timestamp, &out);
+      convertedSeqNo, timestamp, &out);
 
   return createReturnValue(rt, code, &out);
 };

@@ -2,3 +2,8 @@ example/metro.config.js
 example/babel.config.js
 **/build/**
 build/**
+**/scripts/install.js
+**/installBinary.js
+**/babel.config.js
+node_modules/
+**/node_modules/**

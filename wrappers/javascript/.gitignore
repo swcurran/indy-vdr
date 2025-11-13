@@ -37,6 +37,7 @@ android.iml
 # node.js
 node_modules/
 yarn-error.log
+.yarn/install-state.gz
 
 # BUCK
 buck-out/
@@ -47,5 +48,5 @@ android/keystores/debug.keystore
 react-native/android/gradle*
 
 **/build
-**/native/mobile
+**/native/
 genesis.txn

@@ -11,6 +11,7 @@
 - [Wrappers](#building-from-source)
 - [Proxy Server](#proxy-server)
 - [Connecting to a Ledger](#connecting-to-a-ledger)
+- [Configuration](#configuration)
 - [How to Contribute](#how-to-contribute)
 
 ## Introduction
@@ -42,6 +43,7 @@ At a later stage it should be possible to install a precompiled 'wheel' package 
 The `indy-vdr-proxy` executable can be used to provide a simple REST API for interacting with one or more Indy ledgers. Command line options can be inspected by running `indy-vdr-proxy --help`.
 
 To start the proxy server for a single ledger use the following command:
+
 ```
 indy-vdr-proxy -p <PORT> (-g <OPTIONAL_PATH_TO_GENESIS_FILE>)
 ```
@@ -51,15 +53,18 @@ To start the proxy server with the standard configuration of indy ledgers use th
 This will get the ledger configuration from `https://github.com/IDunion/indy-did-networks`
 
 A custom ledger configuration can be provided either by specifying a Github repo or a local folder:
+
 ```
 indy-vdr-proxy -p <PORT> -g <GITHUB_URL or PATH_TO_FOLDER> -- --multiple-ledgers
 ```
+
 The structure needs to be as follows `<NAMESPACE>/OPTIONAL<SUB_NAMESPACE>/pool_transactions_genesis.json`, e.g. `/sovrin/staging/pool_transactions_genesis.json`
 
 Responses can be formatted in either HTML or JSON formats. HTML formatting is selected when the `text/html` content type is requested according to the Accept header (as sent by web browsers) or the request query string is set to `?html`. JSON formatting is selected otherwise, and may be explicitly selected by using the query string `?raw`. For most ledger requests, JSON responses include information regarding which nodes were contacted is returned in the `X-Requests` header.
 
 Sending prepared requests to the ledger is performed by delivering a POST request to the `{LEDGER}/submit` endpoint, where the body of the request is the JSON-formatted payload. Additional endpoints are provided as shortcuts for ledger read transactions:
-- `/` Return configured ledgers 
+
+- `/` Return configured ledgers
 - `{LEDGER}/` Basic status information about the server and the ledger pool
 - `{LEDGER}/genesis` Return the current set of genesis transactions
 - `{LEDGER}/taa` Fetch the current ledger Transaction Author Agreement
@@ -82,11 +87,21 @@ If the proxy server is used with a single ledger, the `{LEDGER}` part of the pat
 Indy VDR contains a DID Resolver to resolve DIDs and dereference DID Urls to ledger objects from configured ledgers according to the [did:indy specification](https://hyperledger.github.io/indy-did-method/).
 
 `GET /1.0/identifiers/{DID or DID_URL}`
+
 ## Connecting to a Ledger
 
 Whether using the library or the proxy server, you will need a `genesis.txn` file containing the set of pool genesis transactions. You can run a local pool in Docker using [VON-Network](https://github.com/bcgov/von-network) or follow the [Indy-SDK instructions](https://github.com/hyperledger/indy-sdk#how-to-start-local-nodes-pool-with-docker).
 
 However the library is used, the `RUST_LOG` environment variable may be set in order to adjust the volume of logging messages produced. Acceptable values are `error`, `warn`, `info`, `debug`, and `trace`. The `RUST_BACKTRACE` environment variable may also be set to `full` for extended output in the case of fatal errors.
+
+## Configuration
+
+The following environment variables can be used to configure indy-vdr behavior:
+
+### Logging Configuration
+
+- **`RUST_LOG`** - Controls logging verbosity (`error`, `warn`, `info`, `debug`, `trace`)
+- **`RUST_BACKTRACE`** - Set to `full` for extended error output
 
 ## How to Contribute
 

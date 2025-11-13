@@ -10,9 +10,9 @@
     ]
   },
   "scripts": {
-    "check-types": "yarn workspaces run tsc --noEmit -p tsconfig.json",
-    "build": "yarn workspaces run build",
-    "clean": "yarn workspaces run clean",
+    "check-types": "yarn workspaces foreach --all --topological-dev run tsc --noEmit --skipLibCheck",
+    "build": "yarn workspaces foreach --all --topological-dev run build",
+    "clean": "yarn workspaces foreach --all --topological-dev run clean",
     "prettier": "prettier --ignore-path .gitignore '**/*.+(js|json|ts|md|yml|yaml)'",
     "format": "yarn prettier --write",
     "check-format": "yarn prettier --list-different",
@@ -45,5 +45,6 @@
     "lerna": "7.2.0",
     "prettier": "^2.5.1",
     "typescript": "~4.9.4"
-  }
+  },
+  "packageManager": "yarn@4.9.2"
 }

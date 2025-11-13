@@ -8,7 +8,7 @@ This document focuses on developer documentation for the wrapper. For usage see 
 
 ### Prerequisites
 
-- Node.js 16.11.0 or higher
+- Node.js 20.0.0 or higher
 - Yarn
 
 ### Installation

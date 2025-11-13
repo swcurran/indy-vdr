@@ -103,5 +103,13 @@ module.exports = {
         '@typescript-eslint/no-unsafe-assignment': 'off',
       },
     },
+    {
+      files: ['**/indy-vdr-react-native/**'],
+      rules: {
+        'import/namespace': 'off',
+        '@typescript-eslint/no-explicit-any': 'warn',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+      },
+    },
   ],
 }
