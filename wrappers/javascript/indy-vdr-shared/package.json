@@ -25,7 +25,7 @@
     "prepublishOnly": "yarn run build"
   },
   "dependencies": {
-    "tar": "^7.4.3"
+    "tar": "^7.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
