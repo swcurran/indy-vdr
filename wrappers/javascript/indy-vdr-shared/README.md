@@ -62,7 +62,8 @@ How you approach it is up to you, as long as the native binding are called befor
 
 The JavaScript wrapper is versioned independently from the native bindings. The following table shows the compatibility between the different versions:
 
-| Indy VDR      | JavaScript Wrapper |
-| ------------- | ------------------ |
-| v0.4.0-dev.16 | v0.1.0             |
-| v0.4.1        | v0.2.0             |
+| Indy VDR      | JavaScript Wrapper   |
+| ------------- | -------------------- |
+| v0.4.0-dev.16 | v0.1.0               |
+| v0.4.1        | >= v0.2.0 & < v0.2.3 |
+| v0.4.4        | v0.2.3               |
